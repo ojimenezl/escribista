@@ -15,10 +15,18 @@ import indexRoutes from "./routes/index.routes.js";
 import notesRoutes from "./routes/notes.routes.js";
 import userRoutes from "./routes/auth.routes.js";
 import "./config/passport.js";
+import bodyParser from 'body-parser';
+
 
 // Initializations
 const app = express();
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+
+
+
+
 
 // settings
 app.set("port", PORT);
@@ -30,11 +38,29 @@ const hbs = exphbs.create({
   layoutsDir: join(app.get("views"), "layouts"),
   partialsDir: join(app.get("views"), "partials"),
   extname: ".hbs",
+    helpers: {
+    // Define el helper personalizado llamado 'ifEquals'
+    ifEquals: function (arg1, arg2, options) {
+      return arg1 == arg2 ? options.fn(this) : options.inverse(this);
+    },
+    ifEqualsOr: function (arg1, arg2, arg3, options) {
+      const condition1 = arg1 == arg2;
+      const condition2 = arg3;
+  
+      if (condition1 || condition2) {
+        return options.fn(this); // Ejecutar el bloque {{#if}}
+      } else {
+        return options.inverse(this); // Ejecutar el bloque {{else}}
+      }
+    }
+    
+  }
 });
 app.engine(".hbs", hbs.engine);
 app.set("view engine", ".hbs");
 
 // middlewares
+app.use(bodyParser.json());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method"));
@@ -55,7 +81,10 @@ app.use((req, res, next) => {
   res.locals.success_msg = req.flash("success_msg");
   res.locals.error_msg = req.flash("error_msg");
   res.locals.error = req.flash("error");
-  res.locals.user = req.user || null;
+  if (req.user) {
+    const user = req.user.toJSON();
+    res.locals.user = user || null;
+  }
   next();
 });
 
@@ -66,6 +95,10 @@ app.use(notesRoutes);
 
 // static files
 app.use(express.static(join(__dirname, "public")));
+
+
+
+
 
 app.use((req, res, next) => {
   return res.status(404).render("404");

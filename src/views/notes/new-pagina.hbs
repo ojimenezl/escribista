@@ -1,0 +1,628 @@
+<style>
+  .bold {
+    font-weight: bold;
+  }
+
+  .italic {
+    font-style: italic;
+  }
+
+  .underline {
+    text-decoration: underline;
+  }
+
+  .justify-left {
+    text-align: left;
+  }
+
+  .justify-center {
+    text-align: center;
+  }
+
+  .justify-right {
+    text-align: right;
+  }
+
+  @keyframes blink {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .live-icon {
+    color: red;
+    animation: blink 1s infinite;
+  }
+
+  #directo {
+    text-decoration: none;
+    color: red;
+    display: none;
+  }
+
+  .textarea-console[readonly] {
+    /* background-color: #f0f0f0;  Cambia el color de fondo */
+    /* color: #b0b0b0;  Cambia el color del texto */
+    cursor: not-allowed;
+    /* Cambia el cursor a no permitido */
+  }
+
+  .green-button {
+    background-color: #3ace3a;
+    /* Verde fosforescente */
+    color: black;
+    /* Puedes cambiar esto si deseas un color de texto diferente */
+
+  }
+
+  /* Estilos para el botón "small-button" */
+  .small-button {
+    height: 45px;
+    /* Establece la altura deseada, por ejemplo 30px */
+  }
+</style>
+<!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+
+
+{{#if estado}}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12 my-8">
+      <div class="notebook">
+        <div class="button-container d-inline-block mx-2">
+          <a id="directo"><i class="fas fa-circle live-icon"></i>En directo</a>
+        </div>
+        <form id="myForm">
+          <div class="notebook-header text-center">
+            <!-- Agrega un elemento HTML para mostrar el número de usuarios conectados -->
+            <p style="color: white;">Usuarios conectados: <span id="roomUsersCount">0</span></p>
+
+            <h3 class="notebook-title" style="color: white;">{{capitulo.title}}</h3>
+          </div>
+          <div class="notebook-content">
+            <div class="form-group">
+              <div class="d-flex">
+                <div class="flex-grow-1 mr-2">
+
+                  <label for="title" class="form-label" style="color: white;">Titulo:</label>
+                  <input type="text" name="idHistoria" value="{{idHistoria}}" hidden>
+                  <input type="text" name="idUser" value="{{user._id}}" hidden>
+                  <input type="text" name="idCapCreado" value="" hidden>
+
+                  <input type="text" name="title" id="title-input" class="form-control"
+                    style="width: 35%; height: 40px;" placeholder="Title" autofocus oninput="updateLabel(this.value)">
+
+                </div>
+                <button id="liveButton" class="btn btn-secondary green-button small-button align-self-end mt-2"
+                  type="submit">Play</button>
+              </div>
+            </div>
+
+
+            <div class="form-group">
+              <label for="description-div" class="form-label" style="color: white;">Descripción:</label>
+              <div id="description-div" class="textarea-console" contenteditable="true"
+                style="border: 1px solid white; resize: none; height: 360px; color: white;">
+                <br>{{capitulo.description}}<br>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="description-div" class="form-label" style="color: white;">Descripción:</label>
+              <p id="description-div" style="color: white;">{{{capitulo.description}}}</p>
+            </div>
+
+
+          </div>
+
+          <textarea name="description" id="description" hidden></textarea>
+
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-secondary" onclick="toggleFormat('italic')"><i
+                class="fas fa-italic"></i></button>
+            <button type="button" class="btn btn-secondary" onclick="toggleBold()"><i class="fas fa-bold"></i></button>
+            <button type="button" class="btn btn-secondary" onclick="toggleFormat('underline')"><i
+                class="fas fa-underline"></i></button>
+            <button type="button" class="btn btn-secondary" onclick="toggleAlignment('justify-left')"><i
+                class="fas fa-align-left"></i></button>
+            <button type="button" class="btn btn-secondary" onclick="toggleAlignment('justify-center')"><i
+                class="fas fa-align-center"></i></button>
+            <button type="button" class="btn btn-secondary" onclick="toggleAlignment('justify-right')"><i
+                class="fas fa-align-right"></i></button>
+
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{else}}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12 my-8">
+      <div class="notebook">
+        <div class="button-container d-inline-block mx-2">
+          <a id="directo"><i class="fas fa-circle live-icon"></i>En directo</a>
+        </div>
+        <form id="myForm">
+          <div class="notebook-header text-center">
+            <p style="color: white;">Usuarios conectados: <span id="roomUsersCount">0</span></p>
+            <h3 class="notebook-title" style="color: white;"></h3>
+          </div>
+          <div class="notebook-content">
+            <div class="form-group">
+              <div class="d-flex">
+                <div class="flex-grow-1 mr-2">
+                  {{#ifEquals user._id capitulo.user}}
+                  <label for="title" class="form-label" style="color: white;">Titulo:</label>
+                  <input type="text" name="idHistoria" value="{{idHistoria}}" hidden>
+                  <input type="text" name="idUser" value="{{user._id}}" hidden>
+                  <input type="text" name="idCapCreado" value="" hidden>
+                  <input type="text" name="title" id="title-input" class="form-control"
+                    style="width: 35%; height: 40px;" placeholder="Title" autofocus oninput="updateLabel(this.value)">
+
+                </div>
+
+                <button id="liveButton" class="btn btn-primary green-button small-button align-self-end mt-2"
+                  type="submit">Play</button>
+                {{/ifEquals}}
+              </div>
+            </div>
+
+
+            {{#ifEquals user._id capitulo.user}}
+            <div class="form-group">
+              <label for="description-div" class="form-label" style="color: white;">Descripción:</label>
+              <div id="description-div" class="textarea-console" contenteditable="true"
+                style="border: 1px solid white; resize: none; height: 360px; color: white;">
+                <br><br>
+              </div>
+            </div>
+            {{else}}
+            <div class="form-group">
+              <label for="description-div" class="form-label" style="color: white;">Descripción:</label>
+              <p id="description-div" style="color: white;"></p>
+            </div>
+            {{/ifEquals}}
+
+
+          </div>
+          {{#ifEquals user._id capitulo.user}}
+
+          <textarea name="description" id="description" hidden></textarea>
+
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-secondary" onclick="toggleFormat('italic')"><i
+                class="fas fa-italic"></i></button>
+            <button type="button" class="btn btn-secondary" onclick="toggleBold()"><i class="fas fa-bold"></i></button>
+            <button type="button" class="btn btn-secondary" onclick="toggleFormat('underline')"><i
+                class="fas fa-underline"></i></button>
+            <button type="button" class="btn btn-secondary" onclick="toggleAlignment('justify-left')"><i
+                class="fas fa-align-left"></i></button>
+            <button type="button" class="btn btn-secondary" onclick="toggleAlignment('justify-center')"><i
+                class="fas fa-align-center"></i></button>
+            <button type="button" class="btn btn-secondary" onclick="toggleAlignment('justify-right')"><i
+                class="fas fa-align-right"></i></button>
+
+          </div>
+          {{/ifEquals}}
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{/if}}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+<script>
+  //sesion
+  function restoreStateFromSessionStorage() {
+      console.log("tite: ")
+
+    const button = document.getElementById('liveButton');
+    const textarea = document.getElementById('description-div');
+    const notebookTitle = document.querySelector('.notebook-title');
+    const titleInput = document.getElementById('title-input');
+
+    // Obtener el estado del botón y el contenido del textarea desde el almacenamiento de sesión
+    const buttonState = sessionStorage.getItem('buttonState');
+    const textareaContent = sessionStorage.getItem('textareaContent');
+    const titleTexth3 = sessionStorage.getItem('title');
+
+      console.log("tite: ",titleTexth3)
+
+    // Restaurar el estado del botón y el contenido del textarea si existen datos en el almacenamiento de sesión
+    if (buttonState) {
+      button.textContent = buttonState;
+      button.style.backgroundColor = buttonState === 'Stop' ? 'red' : 'succes';
+
+    }
+    if (textareaContent) {
+      textarea.innerHTML = textareaContent;
+    }
+
+    if (titleTexth3) {
+      notebookTitle.innerHTML = titleTexth3;
+      console.log("tite: ",titleTexth3)
+      titleInput.value = titleTexth3;
+    }
+
+    // Obtener el texto del h3 y guardar en el almacenamiento de sesión
+  }
+
+  // Llamar a la función para restaurar el estado cuando la página se cargue
+  document.addEventListener('DOMContentLoaded', () => {
+
+    restoreStateFromSessionStorage();
+    //document.getElementById('description').value = sessionStorage.getItem('textareaContent');
+    const descriptionElement = document.getElementById('description');
+
+    // Verifica si el elemento existe
+    if (descriptionElement) {
+      // Obtén el contenido almacenado en la sesión para el elemento "description"
+      const textareaContent = sessionStorage.getItem('textareaContent');
+
+      // Asigna el contenido almacenado al elemento "description"
+      descriptionElement.value = textareaContent;
+    }
+
+
+    const button = document.getElementById('liveButton');
+    if (button) {
+      if (button.textContent === 'Stop') {
+        console.log("en directo muestra", button.textContent)
+        // Mostrar el elemento cuando se cumple la condición
+        const directoElement = document.querySelector('#directo');
+        directoElement.style.display = 'block';
+      } else {
+        console.log("en directo NO muestra", button.textContent)
+        // Ocultar el elemento en otros casos
+        const directoElement = document.querySelector('#directo');
+        directoElement.style.display = 'none';
+      }
+    }
+
+
+
+  });
+
+  //
+  function updateLabel(value) {
+    const label = document.querySelector('.notebook-title');
+    label.textContent = value ? value : 'Nuevo Capitulo';
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('myForm');
+    form.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+      }
+    });
+  });
+
+  const descriptionDiv = document.getElementById('description-div');
+
+  descriptionDiv.addEventListener('keyup', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Evita que se inserte una nueva línea por defecto
+      const selection = window.getSelection();
+      const range = selection.getRangeAt(0);
+      const br = document.createElement('br');
+      range.insertNode(br);
+      range.setStartAfter(br);
+      range.setEndAfter(br);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      descriptionDiv.focus(); // Vuelve a enfocar el elemento <div>
+    }
+  });
+
+  function toggleFormat(style) {
+    const textarea = document.getElementById('description-div');
+    const selection = window.getSelection();
+
+    textarea.focus();
+    document.execCommand(style, false, null);
+
+    const state = document.queryCommandState(style);
+    const button = document.querySelector(`[onclick="toggleFormat('${style}')"]`);
+
+    if (state) {
+      button.classList.add('active');
+    } else {
+      button.classList.remove('active');
+    }
+  }
+
+  function toggleBold() {
+    const textarea = document.getElementById('description-div');
+    const selection = window.getSelection();
+
+    textarea.focus();
+    document.execCommand('bold', false, null);
+
+    const state = document.queryCommandState('bold');
+    const button = document.querySelector('[onclick="toggleBold()"]');
+
+    if (!state) {
+      textarea.classList.add('bold');
+      button.classList.add('active');
+    } else {
+      textarea.classList.remove('bold');
+      button.classList.remove('active');
+    }
+  }
+
+  function toggleAlignment(alignment) {
+    const textarea = document.getElementById('description-div');
+    const selection = window.getSelection();
+
+    textarea.focus();
+    document.execCommand(alignment, false, null);
+
+    const style = window.getComputedStyle(textarea);
+    const textAlign = style.getPropertyValue('text-align');
+    const button = document.querySelector(`[onclick="toggleAlignment('${alignment}')"]`);
+    if ("justify-" + textAlign !== alignment) {
+      textarea.classList.add(alignment);
+      button.classList.add('active');
+    } else {
+      textarea.classList.remove(alignment);
+      button.classList.remove('active');
+    }
+  }
+
+  // Obtener el elemento del div con contenido editable
+  const descriptionDiv2 = document.getElementById('description-div');
+  // Obtener el textarea oculto
+  const descriptionInput2 = document.getElementById('description');
+
+  // Manejar el evento 'input' para detectar cambios en el div con contenido editable
+  descriptionDiv2.addEventListener('input', () => {
+
+    const text = descriptionDiv2.innerHTML;
+    descriptionInput2.value = text;
+    sessionStorage.setItem('textareaContent', text);
+
+  });
+  const notebookTitle = document.querySelector('.notebook-title');
+
+  // Función para manejar el cambio en el contenido del h3
+  function handleTitleChange() {
+    const titleText = notebookTitle.textContent.trim();
+      console.log("tite session: ",titleText)
+//son direnentes sesiones y no puedo guardar ahi e lituo
+    sessionStorage.setItem('title', titleText);
+  }
+
+  // Añadir el evento 'DOMSubtreeModified' al h3
+  notebookTitle.addEventListener('DOMSubtreeModified', handleTitleChange);
+
+  async function confirmBroadcastEnVivo() {
+    const result = await Swal.fire({
+      title: '¿Estás listo para transmitir en vivo?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí',
+      cancelButtonText: 'No',
+    });
+
+    return result.isConfirmed;
+  }
+  async function confirmBroadcastStopVivo() {
+    const result = await Swal.fire({
+      title: '¿Quieres terminar la transmision en vivo?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí',
+      cancelButtonText: 'No',
+    });
+
+    return result.isConfirmed;
+  }
+
+
+
+  // Función para cambiar el texto y color del botón
+  async function setLiveMode() {
+    const button = document.getElementById('liveButton');
+    let editar = false;
+    let confirm = false;
+    if (button.textContent === 'Play') {
+      const readyToBroadcast = await confirmBroadcastEnVivo();
+      if (readyToBroadcast) {
+        // Cambiar el texto y color cuando se haga clic por primera vez
+        button.textContent = 'Stop';
+        button.style.backgroundColor = 'red';
+        button.disabled = false;
+        confirm = true;
+        // Mostrar el elemento cuando se cumple la condición
+        const directoElement = document.querySelector('#directo');
+        directoElement.style.display = 'block';
+      }
+    } else {
+      // Aquí solo verificamos si el botón está en modo "En Vivo" y no hacemos ninguna otra acción.
+      // Si el usuario no desea parar la transmisión, simplemente se ignora este bloque.
+      const readyToBroadcastStop = await confirmBroadcastStopVivo();
+      if (readyToBroadcastStop) {
+        // Cambiar el texto y color cuando el botón ya está en modo "En Vivo"
+        button.textContent = 'Guardardo';
+        button.style.backgroundColor = 'grey';
+        editar = true;
+        button.disabled = true;
+        confirm = true;
+        // Ocultar el elemento en otros casos
+        const directoElement = document.querySelector('#directo');
+        directoElement.style.display = 'none';
+      }
+    }
+    // Guardar el estado actual del botón en el almacenamiento de sesión
+    sessionStorage.setItem('buttonState', button.textContent);
+    // Guardar el contenido actual del textarea en el almacenamiento de sesión
+    const textareaContent = document.getElementById('description-div').innerHTML;
+    sessionStorage.setItem('textareaContent', textareaContent);
+    // Habilitar nuevamente el botón para permitir más envíos
+    return [editar, confirm];
+  }
+
+
+  // Agregar el evento click al botón
+  const liveButton = document.getElementById('liveButton');
+  if (liveButton) {
+    liveButton.addEventListener('click', async (event) => {
+      event.preventDefault(); // Evitar el comportamiento predeterminado del botón (recargar la página)
+      let [edit, confirm] = await setLiveMode();
+      if (!edit && confirm) {
+        // Capturar los datos del formulario manualmente
+        console.log("crear ", edit, confirm)
+        const idHistoria = document.querySelector('input[name="idHistoria"]').value;
+        const title = document.getElementById('title-input').value;
+        const description = document.getElementById('description').value;
+        const url = window.location.href;
+        const estado = true;
+        // Crear un objeto con los datos a enviar al servidor
+        const formData = {
+          idHistoria: idHistoria,
+          title: title,
+          description: description,
+          url: url,
+          estado: estado,
+        };
+
+        // Envío del formulario mediante AJAX
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            // Aquí puedes realizar acciones adicionales después del envío del formulario, si es necesario.
+            if (xhr.status === 200) {
+              // La solicitud se completó correctamente
+              const response = JSON.parse(xhr.responseText);
+              const savedNoteId = response.savedNoteId; // Aquí obtenemos el ID del objeto creado
+              // Asignar el valor del ID al input
+              const idCapCreadoInput = document.querySelector('input[name="idCapCreado"]');
+              idCapCreadoInput.value = savedNoteId;
+              sessionStorage.setItem('idSession', savedNoteId);
+
+              // Aquí puedes realizar acciones adicionales con la respuesta del servidor
+            }
+          }
+        };
+
+        xhr.open('POST', '/notes/new-pagina', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(formData));
+      } else {
+        if (confirm) {
+          // Capturar los datos del formulario manualmente
+          const idHistoria = document.querySelector('input[name="idHistoria"]').value;
+          const title = document.getElementById('title-input').value;
+          const description = document.getElementById('description').value;
+          const url = window.location.href;
+          const estado = false;
+          // Crear un objeto con los datos a enviar al servidor
+          const idCapCreadoInputid = document.querySelector('input[name="idCapCreado"]').value || sessionStorage.getItem('idSession');
+          const idSession = sessionStorage.getItem('idSession');
+
+          const formData = {
+            idHistoria: idHistoria,
+            title: title,
+            description: description,
+            url: url,
+            estado: estado,
+            idEdit: idCapCreadoInputid || idSession,
+          };
+          // Envío del formulario mediante AJAX
+          const xhr = new XMLHttpRequest();
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+
+              // La solicitud se realizó correctamente (estado 200) y la respuesta está disponible en xhr.responseText o xhr.response
+              const responseText = xhr.responseText; // Obtener la respuesta como texto
+              const responseObject = JSON.parse(responseText); // Si la respuesta es JSON, puedes convertirla a objeto
+              const idHistoria = responseObject.data.idHistoria;
+              console.log(responseObject.data.idHistoria); // Hacer lo que necesites con la respuesta
+              // Ocurrió un error en la solicitud
+
+              // Aquí puedes realizar acciones adicionales después del envío del formulario, si es necesario.
+              //console.log("message fuera: ", socket)
+
+              //socket.on('finStream', (data) => {
+              //console.log("message: ",data)
+
+              //const { message } = data;
+              //console.log("message: ",message)
+              // Mostrar el mensaje usando SweetAlert2
+              //Swal.fire({
+              // title: 'Capítulo Finalizado',
+              // text: message,
+              // icon: 'info',
+              // confirmButtonText: 'Aceptar',
+              // });
+              //});
+
+
+              sessionStorage.clear();
+              window.location.href = '/notes/paginas/' + idHistoria + '?';
+
+            }
+          };
+          xhr.open('PUT', '/capitulo/edit-cap/' + idCapCreadoInputid, true);
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.send(JSON.stringify(formData));
+        }
+      }
+    });
+
+  }
+
+
+
+
+
+  ////////////////////////////////////socket io
+  ////////////////////////////////////
+  ////////////////////////////////////
+  // Conexión al servidor de Socket.io
+  //const socket = io('https://escribista.fly.dev');
+  const socket = io();
+  console.log("aquii ", socket)
+
+  // Obtener el elemento del textarea
+  // Obtener el elemento donde mostrar el número de usuarios conectados
+  const roomUsersCountElement = document.getElementById('roomUsersCount');
+  const textarea = document.getElementById('description-div');
+  // Manejar el evento 'updateRoomUsersCount' para actualizar el número de usuarios conectados
+  socket.on('updateRoomUsersCount', (count) => {
+    console.log("aquii ", count)
+    roomUsersCountElement.textContent = count;
+  });
+  // Manejar el evento 'input' para detectar cambios en el textarea
+  textarea.addEventListener('input', () => {
+    const text = textarea.innerHTML;
+    socket.emit('textChange', { text });
+  });
+
+  // Manejar el evento 'textChange' para actualizar el contenido del textarea
+  socket.on('textChange', (data) => {
+    if (data) {
+      textarea.innerHTML = data;
+    }
+  });
+  // Enviar información adicional al servidor cuando se conecta un nuevo escritor
+  socket.on('connect', () => {
+    const idHistoria = "{{idHistoria}}";
+    socket.emit('joinRoom', idHistoria);
+  });
+</script>

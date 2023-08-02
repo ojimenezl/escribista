@@ -1,0 +1,124 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+<style>
+  /* Estilo para el título truncado */
+  .trunc-title {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Estilo para la descripción truncada */
+  .trunc-description {
+    display: block;
+    width: 100%;
+    height: 65px;
+    /* Establece la altura máxima deseada para la descripción */
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+   @keyframes blink {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .live-icon {
+    color: red;
+    animation: blink 1s infinite;
+  }
+  #directo {
+    text-decoration: none;
+    color: red;
+  }
+   /* Clase para el div más grande */
+.big-div {
+  background-color: black;
+  color: white;
+}
+/* Clase para cambiar el color del icono a blanco */
+.white-icon {
+  color: white;
+}
+/* Clase para el botón "Register" */
+.green-button {
+  background-color: #3ace3a; /* Verde fosforescente */
+  color: black; /* Puedes cambiar esto si deseas un color de texto diferente */
+}
+.black-button {
+  background-color: #000000; /* Verde fosforescente */
+  color: white; /* Puedes cambiar esto si deseas un color de texto diferente */
+}
+</style>
+
+<div class="row">
+  <div>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const url = window.location.href;
+        const id = url.substring(url.lastIndexOf('/') + 1, url.indexOf('?'));
+
+        document.getElementById('myForm').action = `/notes/add-capitulo/${id}?`;
+      });
+    </script>
+    {{#ifEquals user._id creador}}
+    <div class="button-container mb-4">
+      <form id="myForm" action="">
+        <button type="submit" class="btn btn-light btn-block btn-sm black-button">Nuevo</button>
+      </form>
+    </div>
+    
+    {{/ifEquals}}
+
+  </div>
+  {{#each foundNote}}
+  <div class="col-md-3">
+    <div class="card big-div">
+      <div class="card-body">
+        <h4 class="card-title d-flex justify-content-between align-items-center">
+          <span class="trunc-title">{{ title }}</span>
+        </h4>
+        <p class="trunc-description">{{{ description }}}</p>
+        <!-- DELETE REQUEST -->
+        {{#if estado}}
+        <div class="button-container d-inline-block mx-2">
+        <a href="{{url}}" id="directo"><i class="fas fa-circle live-icon"></i>En directo</a>
+        </div>
+
+        {{else}}
+        <div class="button-container d-inline-block mx-2 ">
+          <form action="/notes/see/{{_id}}">
+            <button type="submit" class="btn btn-block btn-sm green-button"><i class="fas fa-book-open white-icon"></i></button>
+          </form>       
+        </div>
+        
+        {{/if}}
+
+        {{#ifEquals actual user}}
+        <div class="button-container d-inline-block mx-2">
+        <form action="/capitulo/delete/{{_id}}?_method=DELETE" method="POST">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit" class="btn btn-danger btn-block btn-sm black-button"><i class="fas fa-trash-alt"></i></button>
+        </form>
+      </div>
+
+        {{/ifEquals}}
+      </div>
+    </div>
+  </div>
+  {{else}}
+  <div class="card mx-auto">
+    <div class="card-body">
+      <h1>Hello {{user.name}}</h1>
+      <p class="lead">There are not Notes yet.</p>
+      <a href="/notes/add" class="btn btn-success btn-block">Crea una Historia!</a>
+    </div>
+  </div>
+  {{/each}}
+</div>

@@ -10,7 +10,7 @@ const NoteSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    user: {
+    creador: {
       type: String,
       required: true,
     },

@@ -1,16 +1,23 @@
+<style>
+  /* Clase para el botón "Register" */
+.green-button {
+  background-color: #3ace3a; /* Verde fosforescente */
+  color: black; /* Puedes cambiar esto si deseas un color de texto diferente */
+}
+</style>
 <div class="row">
   <div class="col-md-4 mx-auto">
     <div class="card mt-5 bg-black text-white rounded">
       <div class="card-header text-center pt-5">
         <h1 class="h4 text-white">
-          Account Login
+          Login
         </h1>
       </div>
-      <img
+      {{!-- <img
         class="rounded-circle mx-auto d-block logo m-4"
         src="/img/logo.png"
         alt="Logo"
-      />
+      /> --}}
       <div class="card-body">
         <form action="/auth/signin" method="POST">
           <div class="mb-3">
@@ -32,13 +39,13 @@
               placeholder="Password"
             />
           </div>
-          <button class="btn btn-success btn-block">
+          <button class="btn btn-block green-button">
             Signin
           </button>
         </form>
       </div>
 
-      <p class="text-center">Don't Have an Account? <a href="/auth/signup" class="text-info">Register</a></p>
+      <p class="text-center">No tienes cuenta? <a href="/auth/signup" class="text-info">Registrate</a></p>
     </div>
   </div>
 </div>

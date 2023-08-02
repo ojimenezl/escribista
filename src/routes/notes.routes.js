@@ -14,6 +14,7 @@ import {
   seeNote,
   deleteCapitulo,
   updateCapitulo,
+  handleLike,
 } from "../controllers/notes.controller.js";
 import { isAuthenticated } from "../helpers/auth.js";
 
@@ -50,6 +51,6 @@ router.post("/notes/new-pagina", isAuthenticated, createNewPagina);
 //mirar capitulo
 router.get("/notes/see/:id", isAuthenticated, renderSeeForm);
 router.put("/notes/see-note/:id", isAuthenticated, seeNote);
-
+router.post("/notes/like/:id", handleLike);
 
 export default router;

@@ -32,7 +32,7 @@ async function main() {
 
     // Enviar el número de usuarios conectados a todos los clientes en la sala
     io.to(roomId).emit('updateRoomUsersCount', roomUsersCount.get(roomId));
-    io.to(roomId).emit('finStream', { message });
+    //io.to(roomId).emit('finStream', { message });
 
     });
 

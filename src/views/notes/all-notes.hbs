@@ -17,24 +17,44 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-    /* Clase para el div más grande */
-.big-div {
-  background-color: black;
-  color: white;
-}
-/* Clase para cambiar el color del icono a blanco */
-.white-icon {
-  color: white;
-}
-/* Clase para el botón "Register" */
-.green-button {
-  background-color: #3ace3a; /* Verde fosforescente */
-  color: black; /* Puedes cambiar esto si deseas un color de texto diferente */
-}
-.black-button {
-  background-color: #000000; /* Verde fosforescente */
-  color: white; /* Puedes cambiar esto si deseas un color de texto diferente */
-}
+
+  /* Clase para el div más grande */
+  .big-div {
+    background-color: black;
+    color: white;
+  }
+
+  /* Clase para cambiar el color del icono a blanco */
+  .white-icon {
+    color: white;
+  }
+
+  /* Clase para el botón "Register" */
+  .green-button {
+    background-color: #3ace3a;
+    /* Verde fosforescente */
+    color: black;
+    /* Puedes cambiar esto si deseas un color de texto diferente */
+  }
+
+  .black-button {
+    background-color: #000000;
+    /* Verde fosforescente */
+    color: white;
+    /* Puedes cambiar esto si deseas un color de texto diferente */
+  }
+
+  .red-button {
+    background-color: #000000;
+    /* Verde fosforescente */
+    color: red;
+    /* Puedes cambiar esto si deseas un color de texto diferente */
+  }
+
+  /* Agregamos una nueva clase para cambiar el color del corazón */
+  .red-heart {
+    color: red;
+  }
 </style>
 
 <div class="row">
@@ -50,12 +70,13 @@
     <div class="card big-div">
       <div class="card-body">
         <h4 class="card-title d-flex justify-content-between align-items-center">
-          <span class="trunc-title">{{ title }} </span><a href="/notes/edit/{{_id}}"><i class="fas fa-edit white-icon"></i></a>
+          <span class="trunc-title">{{ title }} </span><a href="/notes/edit/{{_id}}"><i
+              class="fas fa-edit white-icon"></i></a>
         </h4>
         <p class="trunc-description">{{{ description }}}</p>
 
         <!-- DELETE REQUEST -->
-        {{#ifEqualsOr user creador condicion_cap}}     
+        {{#ifEqualsOr user creador condicion_cap}}
         <div class="button-container d-inline-block mx-2">
           <form action="/notes/paginas/{{_id}}">
             <input type="hidden">
@@ -63,17 +84,26 @@
           </form>
         </div>
         {{else}}
-         <div class="button-container d-inline-block mx-2">
+        <div class="button-container d-inline-block mx-2">
           <label for="">Proximamente</label>
         </div>
         {{/ifEqualsOr}}
-
+        <!-- Likes -->
+        <div class="button-container d-inline-block mx-2">
+          <form action="/notes/like/{{_id}}" method="POST">
+            <button type="submit"
+              class="btn btn-danger btn-block btn-sm {{#if liked}}red-button{{else}}black-button{{/if}}">
+              <i class="fas fa-heart white-icon {{#if liked}}red-heart{{/if}}"></i> {{ likeTotal }}
+            </button>
+          </form>
+        </div>
         {{#ifEquals user creador}}
 
         <div class="button-container d-inline-block mx-2">
           <form action="/notes/delete/{{_id}}?_method=DELETE" method="POST">
             <input type="hidden" name="_method" value="DELETE">
-            <button type="submit" class="btn btn-danger btn-block btn-sm black-button"><i class="fas fa-trash-alt"></i></button>
+            <button type="submit" class="btn btn-danger btn-block btn-sm black-button"><i
+                class="fas fa-trash-alt"></i></button>
           </form>
         </div>
 

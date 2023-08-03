@@ -1,10 +1,10 @@
 {{#each errors}}
-  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    {{text}}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  {{text}}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 {{/each}}
 
 <div class="col-md-4 mx-auto">
@@ -17,24 +17,99 @@
         <input type="hidden" name="_method" value="PUT" />
         <div class="mb-3">
           <label for="title">Title:</label>
-          <input
-            type="text"
-            name="title"
-            class="form-control"
-            value="{{note.title}}"
-          />
+          <input type="text" name="title" class="form-control" value="{{note.title}}" required />
         </div>
         <div class="mb-3">
           <label for="description">Description:</label>
-          <textarea
-            name="description"
-            class="form-control"
-          >{{note.description}}</textarea>
+          <textarea name="description" class="form-control" required>{{note.description}}</textarea>
         </div>
-        <button class="btn btn-primary w-100" type="submit">
-          Save
-        </button>
+        <!-- Nuevo campo: Género -->
+        <div class="mb-3">
+  <label for="genre">Género:</label>
+  <select name="genre" class="form-control" required>
+    <option value="">Selecciona un género</option>
+    <option value="Drama" {{#ifEquals note.genre "Drama"}}selected{{/ifEquals}}>Drama</option>
+    <option value="Psicología" {{#ifEquals note.genre "Psicología"}}selected{{/ifEquals}}>Psicología</option>
+    <option value="Amor" {{#ifEquals note.genre "Amor"}}selected{{/ifEquals}}>Amor</option>
+    <option value="Vida Diaria" {{#ifEquals note.genre "Vida Diaria"}}selected{{/ifEquals}}>Vida Diaria</option>
+    <option value="Aventura" {{#ifEquals note.genre "Aventura"}}selected{{/ifEquals}}>Aventura</option>
+    <option value="Ciencia Ficción" {{#ifEquals note.genre "Ciencia Ficción"}}selected{{/ifEquals}}>Ciencia Ficción</option>
+    <option value="Misterio" {{#ifEquals note.genre "Misterio"}}selected{{/ifEquals}}>Misterio</option>
+    <option value="Fantasía" {{#ifEquals note.genre "Fantasía"}}selected{{/ifEquals}}>Fantasía</option>
+    <option value="Histórica" {{#ifEquals note.genre "Histórica"}}selected{{/ifEquals}}>Histórica</option>
+    <option value="Infantil" {{#ifEquals note.genre "Infantil"}}selected{{/ifEquals}}>Infantil</option>
+    <option value="Juvenil" {{#ifEquals note.genre "Juvenil"}}selected{{/ifEquals}}>Juvenil</option>
+    <option value="Terror" {{#ifEquals note.genre "Terror"}}selected{{/ifEquals}}>Terror</option>
+    <option value="Suspenso" {{#ifEquals note.genre "Suspenso"}}selected{{/ifEquals}}>Suspenso</option>
+    <option value="Humor" {{#ifEquals note.genre "Humor"}}selected{{/ifEquals}}>Humor</option>
+    <option value="Ciencia" {{#ifEquals note.genre "Ciencia"}}selected{{/ifEquals}}>Ciencia</option>
+    <option value="Ensayo" {{#ifEquals note.genre "Ensayo"}}selected{{/ifEquals}}>Ensayo</option>
+    <option value="Biografía" {{#ifEquals note.genre "Biografía"}}selected{{/ifEquals}}>Biografía</option>
+    <option value="Autobiografía" {{#ifEquals note.genre "Autobiografía"}}selected{{/ifEquals}}>Autobiografía</option>
+    <option value="Poesía" {{#ifEquals note.genre "Poesía"}}selected{{/ifEquals}}>Poesía</option>
+    <option value="Teatro" {{#ifEquals note.genre "Teatro"}}selected{{/ifEquals}}>Teatro</option>
+    <option value="Cuento" {{#ifEquals note.genre "Cuento"}}selected{{/ifEquals}}>Cuento</option>
+    <option value="Novela" {{#ifEquals note.genre "Novela"}}selected{{/ifEquals}}>Novela</option>
+    <option value="Ficción" {{#ifEquals note.genre "Ficción"}}selected{{/ifEquals}}>Ficción</option>
+    <option value="No Ficción" {{#ifEquals note.genre "No Ficción"}}selected{{/ifEquals}}>No Ficción</option>
+    <option value="Romance" {{#ifEquals note.genre "Romance"}}selected{{/ifEquals}}>Romance</option>
+    <option value="Viajes" {{#ifEquals note.genre "Viajes"}}selected{{/ifEquals}}>Viajes</option>
+    <option value="Cocina" {{#ifEquals note.genre "Cocina"}}selected{{/ifEquals}}>Cocina</option>
+    <option value="Religión" {{#ifEquals note.genre "Religión"}}selected{{/ifEquals}}>Religión</option>
+    <option value="Política" {{#ifEquals note.genre "Política"}}selected{{/ifEquals}}>Política</option>
+    <option value="Historia" {{#ifEquals note.genre "Historia"}}selected{{/ifEquals}}>Historia</option>
+    <!-- Agrega aquí más géneros literarios -->
+  </select>
+</div>
+
+
+
+        <!-- Nuevo campo: Precio -->
+        <div class="mb-3">
+          {{!-- <div class="form-check form-switch"> --}}
+
+            <div>
+              <label for="gratis">Gratis</label>
+              <input type="checkbox" class="form-check-input" id="gratis">
+            </div>
+            <div id="precioDiv">
+              {{!-- <label for="precio">Precio:</label> --}}
+              <input type="number" id="precio" name="precio" class="form-control" placeholder="Ingrese el precio"
+                value="{{note.precio}}">
+            </div>
+          </div>
+          <button class="btn btn-primary w-100" type="submit">
+            Save
+          </button>
       </form>
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const switchElement = document.getElementById("gratis");
+    const precioDiv = document.getElementById("precioDiv");
+    const precioInput = document.getElementById("precio");
+
+    // Mostrar u ocultar el campo de precio al cambiar el switch
+    switchElement.addEventListener("change", () => {
+      if (switchElement.checked) {
+        precioDiv.style.display = "none";
+        precioInput.value = "Gratis"; // Establecer el valor como "Gratis"
+        precioInput.disabled = true; // Deshabilitar el campo de precio para que no se envíe al servidor
+      } else {
+        precioDiv.style.display = "block";
+        precioInput.value = ""; // Limpiar el valor del input
+        precioInput.disabled = false; // Habilitar el campo de precio para que se envíe al servidor
+      }
+    });
+
+    // Inicialmente, si el switch está activado, ocultar el campo de precio
+    if (switchElement.checked) {
+      precioDiv.style.display = "none";
+      precioInput.value = "Gratis"; // Establecer el valor como "Gratis"
+    }
+  });
+
+</script>

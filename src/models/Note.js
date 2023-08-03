@@ -10,6 +10,14 @@ const NoteSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    genre: {
+      type: String,
+      required: true,
+    },
+    precio: {
+      type: String,
+      required: true,
+    },
     creador: {
       type: String,
       required: true,

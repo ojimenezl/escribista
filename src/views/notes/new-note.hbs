@@ -1,32 +1,103 @@
 <div class="col-md-4 mx-auto">
   <div class="card">
     <div class="card-header bg-dark text-center">
-      <h3 class="text-white">Nueva Historia</h3>
+      <h3 class="text-white">Nuevo Libro</h3>
     </div>
     <div class="card-body text-right">
       <form action="/notes/new-note" method="POST">
         <div class="mb-3">
           <label for="title">Titulo:</label>
-          <input
-            type="text"
-            name="title"
-            class="form-control"
-            placeholder="Title"
-            autofocus
-          />
+          <input type="text" name="title" class="form-control" placeholder="Title" autofocus />
         </div>
         <div class="mb-3">
           <label for="description">Descripcion:</label>
-          <textarea
-            name="description"
-            class="form-control"
-            placeholder="Description"
-          ></textarea>
+          <textarea name="description" class="form-control" placeholder="Description"></textarea>
+        </div>
+        <!-- Nuevo campo: Género -->
+        <div class="mb-3">
+  <label for="genre">Género:</label>
+  <select name="genre" class="form-control" required>
+    <option value="">Selecciona un género</option>
+    <option value="Drama">Drama</option>
+    <option value="Psicología">Psicología</option>
+    <option value="Amor">Amor</option>
+    <option value="Vida Diaria">Vida Diaria</option>
+    <option value="Aventura">Aventura</option>
+    <option value="Ciencia Ficción">Ciencia Ficción</option>
+    <option value="Misterio">Misterio</option>
+    <option value="Fantasía">Fantasía</option>
+    <option value="Histórica">Histórica</option>
+    <option value="Infantil">Infantil</option>
+    <option value="Juvenil">Juvenil</option>
+    <option value="Terror">Terror</option>
+    <option value="Suspenso">Suspenso</option>
+    <option value="Humor">Humor</option>
+    <option value="Ciencia">Ciencia</option>
+    <option value="Ensayo">Ensayo</option>
+    <option value="Biografía">Biografía</option>
+    <option value="Autobiografía">Autobiografía</option>
+    <option value="Poesía">Poesía</option>
+    <option value="Teatro">Teatro</option>
+    <option value="Cuento">Cuento</option>
+    <option value="Novela">Novela</option>
+    <option value="Ficción">Ficción</option>
+    <option value="No Ficción">No Ficción</option>
+    <option value="Romance">Romance</option>
+    <option value="Viajes">Viajes</option>
+    <option value="Cocina">Cocina</option>
+    <option value="Religión">Religión</option>
+    <option value="Política">Política</option>
+    <option value="Historia">Historia</option>
+    <!-- Agrega aquí más géneros literarios -->
+  </select>
+</div>
+
+
+        <!-- Nuevo campo: Precio -->
+        <div class="mb-3">
+          {{!-- <div class="form-check form-switch"> --}}
+
+            <div>
+              <label for="gratis">Gratis</label>
+              <input type="checkbox" class="form-check-input" id="gratis" checked>
+            </div>
+            <div id="precioDiv">
+              {{!-- <label for="precio">Precio:</label> --}}
+              <input type="number" id="precio" name="precio" class="form-control" placeholder="Ingrese el precio" disabled>
+            </div>
         </div>
         <button class="btn btn-primary w-100" type="submit">
-          Save
+          Guardar
         </button>
       </form>
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const switchElement = document.getElementById("gratis");
+    const precioDiv = document.getElementById("precioDiv");
+    const precioInput = document.getElementById("precio");
+
+    // Mostrar u ocultar el campo de precio al cambiar el switch
+    switchElement.addEventListener("change", () => {
+  if (switchElement.checked) {
+    precioDiv.style.display = "none";
+    precioInput.value = "Gratis"; // Establecer el valor como "Gratis"
+    precioInput.disabled = true; // Deshabilitar el campo de precio para que no se envíe al servidor
+  } else {
+    precioDiv.style.display = "block";
+    precioInput.value = ""; // Limpiar el valor del input
+    precioInput.disabled = false; // Habilitar el campo de precio para que se envíe al servidor
+  }
+});
+
+    // Inicialmente, si el switch está activado, ocultar el campo de precio
+    if (switchElement.checked) {
+      precioDiv.style.display = "none";
+      precioInput.value = "Gratis"; // Establecer el valor como "Gratis"
+    }
+  });
+
+</script>

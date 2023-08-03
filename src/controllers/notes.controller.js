@@ -17,14 +17,19 @@ export const renderCapituloForm = async (req, res) => {
   }
 }
 export const createNewNote = async (req, res) => {
-  const { title, description } = req.body;
+  const { title, description, genre, precio } = req.body;
   const errors = [];
+  console.log("gratis", req.body.precio);
   if (!title) {
-    errors.push({ text: "Please Write a Title." });
+    errors.push({ text: "Por favor ingrese un Titulo." });
   }
   if (!description) {
-    errors.push({ text: "Please Write a Description" });
+    errors.push({ text: "Por favor ingrese una Descripcion" });
   }
+  if (!genre) {
+    errors.push({ text: "Por favor seleccione un Genero" });
+  }
+
   if (errors.length > 0)
     return res.render("notes/new-note", {
       errors,
@@ -32,7 +37,7 @@ export const createNewNote = async (req, res) => {
       description,
     });
 
-  const newNote = new Note({ title, description });
+  const newNote = new Note({ title, description, genre, precio: precio || 0 });
   newNote.creador = req.user.id;
   await newNote.save();
   req.flash("success_msg", "Note Added Successfully");
@@ -74,7 +79,38 @@ export const renderNotes = async (req, res) => {
 
   res.render("notes/all-notes", { notes });
 };
+export const renderMyNotes = async (req, res) => {
+  //const notes = await Note.find({ user: req.user.id })
 
+  const notes = await Note.find({ creador: req.user.id })
+    .sort({ date: "desc" })
+    .lean();
+  console.log("mis libros:", notes);
+  for (const note of notes) {
+    const id = note._id;
+    console.log(id);
+    const capitulo = await Capitulo.findOne({ idHistoria: id });
+    let condicion_cap = false;
+
+    if (capitulo) {
+      condicion_cap = true;
+    } else {
+      condicion_cap = false;
+    }
+
+    // Agrega la propiedad condicion_cap al objeto note
+    note.user = req.user.id;
+    note.condicion_cap = condicion_cap;
+    // Consulta la cantidad de likes para el libro actual
+    const countLikes = [...note.likes].length;
+    note.likeTotal = countLikes
+    // Verificamos si el usuario ha dado like a esta nota
+    const likedByUser = isLikedByUser(note, req.user.id);
+    note.liked = likedByUser;
+  }
+
+  res.render("notes/all-mynotes", { notes });
+};
 
 // Función para manejar los likes
 export const handleLike = async (req, res) => {
@@ -135,8 +171,25 @@ export const renderSeeForm = async (req, res) => {
 };
 
 export const updateNote = async (req, res) => {
-  const { title, description } = req.body;
-  await Note.findByIdAndUpdate(req.params.id, { title, description });
+  const { title, description, genre, precio } = req.body;
+  const errors = [];
+
+  // if (!title) {
+  //   errors.push({ text: "Por favor ingrese un Titulo." });
+  // }
+  // if (!description) {
+  //   errors.push({ text: "Por favor ingrese una Descripcion" });
+  // }
+  // if (!genre) {
+  //   errors.push({ text: "Por favor seleccione un Genero" });
+  // }
+  // if (errors.length > 0)
+  // return res.render("notes/edit-note", {
+  //   errors,
+  //   title,
+  //   description,
+  // });
+  await Note.findByIdAndUpdate(req.params.id, { title, description, genre, precio: precio || 0 });
 
   req.flash("success_msg", "Note Updated Successfully");
   res.redirect("/notes");

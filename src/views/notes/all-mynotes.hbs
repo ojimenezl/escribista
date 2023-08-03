@@ -1,5 +1,5 @@
 <style>
-   /* titulo de la pagina */
+  /* titulo de la pagina */
   #divtituloPag {
     display: flex;
     justify-content: center;
@@ -26,6 +26,7 @@
     margin: 0;
     /* Eliminamos el margen predeterminado del h3 para que quede centrado verticalmente */
   }
+
   /* Estilo para el título truncado */
   .trunc-title {
     display: block;
@@ -83,12 +84,14 @@
     color: red;
   }
 </style>
-
 <div id="divtituloPag">
   <div id="contornoTitle">
-    <h3 id="tituloPag">Todos los libros</h3>
+    <h3 id="tituloPag">Mis libros</h3>
   </div>
 </div>
+
+
+
 
 <div class="row">
   <div class="button-container mb-4">
@@ -145,11 +148,11 @@
     </div>
   </div>
   {{else}}
-  <div class="card mx-auto">
+  <div class="card mx-auto big-div">
     <div class="card-body">
-      <h1>Hello {{user.name}}</h1>
-      <p clsss="lead">There are not Notes yet.</p>
-      <a href="/notes/add" class="btn btn-success btn-block">Crea una Historia!</a>
+      <h1>Hola {{user.name}}</h1>
+      <p clsss="lead">No has creado ningun libro aun.</p>
+      <a href="/notes/add" class="btn btn-success btn-block green-button">Crea tu primer Historia!</a>
     </div>
   </div>
   {{/each}}

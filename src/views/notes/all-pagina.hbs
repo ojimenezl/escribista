@@ -1,6 +1,33 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 <style>
+     /* titulo de la pagina */
+  #divtituloPag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 24vh;
+    /* Ajusta esta altura según tus necesidades */
+    margin-top: -70px;
+    margin-bottom: -30px
+  }
+
+  #contornoTitle {
+    background-color: #121212;
+    padding: 20px;
+    border: 2px solid white;
+    /* Puedes ajustar el ancho y color del borde según prefieras */
+    border-radius: 10px;
+    /* Ajusta el valor para cambiar la curvatura del borde */
+    color: white;
+  }
+
+  #tituloPag {
+    color: white;
+    /* Agregamos esta línea para cambiar el color del texto a blanco */
+    margin: 0;
+    /* Eliminamos el margen predeterminado del h3 para que quede centrado verticalmente */
+  }
   /* Estilo para el título truncado */
   .trunc-title {
     display: block;
@@ -57,6 +84,11 @@
 }
 </style>
 
+<div id="divtituloPag">
+  <div id="contornoTitle">
+    <h3 id="tituloPag">Capitulos</h3>
+  </div>
+</div>
 <div class="row">
   <div>
     <script>

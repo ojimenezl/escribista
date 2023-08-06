@@ -69,7 +69,7 @@ export const renderNotes = async (req, res) => {
     note.user = req.user.id;
     note.condicion_cap = condicion_cap;
     // Consulta la cantidad de likes para el libro actual
-    console.log("notas", [...note.likes].length);
+    //console.log("notas", note);
     const countLikes = [...note.likes].length;
     note.likeTotal = countLikes
     // Verificamos si el usuario ha dado like a esta nota

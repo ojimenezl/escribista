@@ -1,30 +1,169 @@
 <style>
   /* Clase para el div más grande */
-.big-div {
-  background-color: black;
-  color: white;
-}
+  .big-div {
+    background-color: black;
+    color: white;
+    margin-bottom: 30%;
+  }
 
-/* Clase para el botón "Register" */
-.green-button {
-  background-color: #3ace3a; /* Verde fosforescente */
-  color: black; /* Puedes cambiar esto si deseas un color de texto diferente */
-}
+  /* Clase para el botón "Register" */
+  .green-button {
+    background-color: #3ace3a;
+    /* Verde fosforescente */
+    color: rgb(0, 0, 0);
+    /* Puedes cambiar esto si deseas un color de texto diferente */
+  }
+
+  @keyframes blink {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .live-icon {
+    color: red;
+    animation: blink 1s infinite;
+  }
+
+  .red-heart {
+    color: red;
+  }
+
+  /* Estilo para la columna izquierda (párrafo) */
+  .p-container {
+    padding-right: 20px;
+    /* Espacio entre el párrafo y la imagen */
+  }
+
+  /* Estilo para la columna derecha (imagen) */
+  .img-container {
+    text-align: center;
+    /* Alinear la imagen al centro dentro de la columna */
+  }
+
+  /* Estilo para la imagen */
+  .img-container img {
+    max-width: 100%;
+    /* Ajustar la imagen al ancho de su contenedor */
+    border-radius: 10px;
+    /* Opcional: Agregar un borde redondeado a la imagen */
+  }
+
+  .img-fluid {
+    border-radius: 5%;
+  }
+
+  /* titulo de la pagina */
+  #divtituloPag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 24vh;
+    /* Ajusta esta altura según tus necesidades */
+    margin-top: -250px;
+    margin-bottom: -140px;
+    color: white
+  }
+  #divInstruccionesPiki {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 24vh;
+    /* Ajusta esta altura según tus necesidades */
+    margin-top: -70px;
+    margin-bottom: -30px;
+    color: white
+  }
+
+  #contornoTitle {
+    background-color: #121212;
+    padding: 20px;
+    border: 2px solid #3ace3a;
+    /* Puedes ajustar el ancho y color del borde según prefieras */
+    border-radius: 10px;
+    /* Ajusta el valor para cambiar la curvatura del borde */
+    color: white;
+  }
+
+  #tituloPag {
+    color: white;
+    /* Agregamos esta línea para cambiar el color del texto a blanco */
+    margin: 0;
+    /* Eliminamos el margen predeterminado del h3 para que quede centrado verticalmente */
+  }
+
+
+  /*piguino container*/
+  #App {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 </style>
 
 <div class="card card-body p-5 mt-4 big-div">
-  <h1 class="display-4">Notes App Nodejs And Mongodb!</h1>
-  <p class="lead">A simple App to manage Notes developed with Nodejs, Express,
-    Mongodb and Javascript Technologies</p>
-  <hr class="my-4" />
-  <p>veniam voluptatibus aliquid unde sit Libero veniam similique ex reiciendis
-    doloribus! Deleniti sunt cum ad est atque. Esse earum
-  </p>
-  <div>
-    <a
-      class="btn btn-primary btn-lg green-button"
-      href="/auth/signup"
-      role="button"
-    >Register</a>
+  <!-- Fila con dos columnas -->
+  <div class="row">
+    <!-- Columna izquierda para el primer párrafo -->
+    <div class="col-md-6">
+      <div class="p-container">
+        <h1 class="display-4">INKIGLOO</h1>
+        <p class="lead">Adéntrate en las sombras del arte literario.
+          Nuestra plataforma es un rincón oscuro y rebelde donde escritores
+          y lectores se funden en un torbellino de ideas. Descubre historias
+          enigmáticas que son creadas en [<i class="fas fa-circle live-icon"></i>vivo],
+          da likes <i class="fas fa-heart red-heart"></i>
+          con pasión y desata tu
+          lado más salvaje en la escritura colaborativa.
+          ¡Únete a la revolución de la escritura!</p>
+        <hr class="my-4" />
+      </div>
+    </div>
+
+    <!-- Columna derecha para la imagen -->
+    <div class="col-md-6">
+      <img src="/img/pin2.jpg" alt="Imagen" class="img-fluid" />
+    </div>
+  </div>
+
+  <!-- Segundo párrafo en una sola columna -->
+  <div class="row">
+    <div class="col-md-12">
+      <p>Desata tu pluma en un rincón de libertad literaria.
+        Únete hoy, rompe esquemas y forja relatos subversivos que
+        dejarán su marca. Regístrate ahora, sumérgete en el caos poético
+        y desafía el statu quo de la escritura. ¡Sé la voz que inquieta y
+        seduce en cada palabra!
+      </p>
+      <div>
+        <a class="btn btn-primary btn-lg green-button" href="/auth/signup" role="button">Register</a>
+        <a class="btn btn-primary btn-lg green-button" href="#App" role="button">Piki</a>
+
+      </div>
+    </div>
   </div>
 </div>
+
+
+
+
+<div id="divtituloPag">
+  <div id="contornoTitle">
+    <h3 id="tituloPag">piki</h3>
+  </div>
+</div>
+<div id="App">
+</div>
+<div id="divInstruccionesPiki">
+  <p id="intruccionesPiki">[cabeza] - [barriga] - [ojo] - [pico]</p>
+</div>
+<!-- Scripts de React y ReactDOM -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.development.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.development.js"></script>
+<script src="/js/pinguino.js"></script>

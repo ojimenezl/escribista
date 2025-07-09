@@ -17,7 +17,8 @@ import userRoutes from "./routes/auth.routes.js";
 import "./config/passport.js";
 import bodyParser from 'body-parser';
 
-
+// Stripe
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 // Initializations
 const app = express();
 

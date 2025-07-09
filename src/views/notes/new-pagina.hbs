@@ -198,7 +198,7 @@
           <div class="btn-group" role="group">
             <button type="button" class="btn btn-secondary" onclick="toggleFormat('italic')"><i
                 class="fas fa-italic"></i></button>
-            <button type="button" class="btn btn-secondary" onclick="toggleBold()"><i class="fas fa-bold"></i></button>
+            {{!-- <button type="button" class="btn btn-secondary" onclick="toggleBold()"><i class="fas fa-bold"></i></button> --}}
             <button type="button" class="btn btn-secondary" onclick="toggleFormat('underline')"><i
                 class="fas fa-underline"></i></button>
             <button type="button" class="btn btn-secondary" onclick="toggleAlignment('justify-left')"><i
@@ -591,8 +591,8 @@
   ////////////////////////////////////
   ////////////////////////////////////
   // Conexión al servidor de Socket.io 
-  const socket = io('https://escribista.fly.dev/');
-  //const socket = io();
+  //const socket = io('https://escribista.fly.dev/');
+  const socket = io();
   console.log("aquii ", socket)
 
   // Obtener el elemento del textarea

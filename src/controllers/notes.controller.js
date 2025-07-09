@@ -115,37 +115,32 @@ export const renderMyNotes = async (req, res) => {
 // Función para manejar los likes
 export const handleLike = async (req, res) => {
   try {
-    // Obtener el ID del libro desde la URL
     const noteId = req.params.id;
-
-    // Buscar el libro por su ID
     const note = await Note.findById(noteId);
 
     if (!note) {
-      // Si el libro no existe, redireccionar al usuario
-      return res.redirect("/notes");
+      return res.status(404).json({ error: 'Note not found' });
     }
 
-    // Verificar si el usuario ya ha dado like anteriormente
     const userId = req.user.id;
     const hasLiked = note.likes.includes(userId);
+    let dislike=false
 
     if (hasLiked) {
-      // Si el usuario ya ha dado like, se elimina el like
       note.likes = note.likes.filter((id) => id !== userId);
+      dislike=true
     } else {
-      // Si el usuario no ha dado like, se agrega el like
       note.likes.push(userId);
+      dislike=false
+
     }
 
-    // Guardar el libro actualizado en la base de datos
     await note.save();
 
-    // Redireccionar al usuario a la página de libros nuevamente
-    res.redirect("/notes");
+    res.status(200).json({ likes: note.likes,dislike:dislike  }); // Enviar el número actualizado de likes
   } catch (error) {
     console.error("Error al manejar el like:", error);
-    res.status(500).send("Error interno del servidor");
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 

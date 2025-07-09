@@ -60,7 +60,8 @@
   /* Clase para el botón "Register" */
   .green-button {
     /*background-color: #3ace3a; */
-    background-color: #000000; */
+    background-color: #000000;
+    */
     /* Verde fosforescente */
     color: black;
     /* Puedes cambiar esto si deseas un color de texto diferente */
@@ -87,40 +88,43 @@
 
   /*Venata opaca */
   /* Estilo para la ventana */
-.button-container-buttons {
-  position: relative;
-  width: 100%; /* Ajusta el ancho según prefieras para que quepan los tres botones */
-  z-index: 2; /* Asegura que la ventana esté por encima de los botones */
-}
+  .button-container-buttons {
+    position: relative;
+    width: 100%;
+    /* Ajusta el ancho según prefieras para que quepan los tres botones */
+    z-index: 2;
+    /* Asegura que la ventana esté por encima de los botones */
+  }
 
-.button-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, .20);
-  backdrop-filter: blur(2px);
-   /* Fondo transparente */
-  border-radius: 5px;
-  /* Ajusta el radio para los bordes */
-  transition: transform 0.3s ease-out;
-  /* Transición para el efecto de deslizamiento */
-  z-index: 1; /* Valor menor que el contenedor para estar por debajo de él */
-  pointer-events: none; /* Evita que la ventana interfiera con los botones */
-}
+  .button-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, .20);
+    backdrop-filter: blur(2px);
+    /* Fondo transparente */
+    border-radius: 5px;
+    /* Ajusta el radio para los bordes */
+    transition: transform 0.3s ease-out;
+    /* Transición para el efecto de deslizamiento */
+    z-index: 1;
+    /* Valor menor que el contenedor para estar por debajo de él */
+    pointer-events: none;
+    /* Evita que la ventana interfiera con los botones */
+  }
 
-/* Estilo para los botones dentro de la ventana */
-.button-container-buttons form {
-  position: relative;
-  /* Coloca los botones encima de la ventana */
-}
+  /* Estilo para los botones dentro de la ventana */
+  .button-container-buttons form {
+    position: relative;
+    /* Coloca los botones encima de la ventana */
+  }
 
-/* Estilo para la animación de deslizamiento */
-.button-container-buttons:hover .button-overlay {
-  transform: translateY(110%);
-}
-
+  /* Estilo para la animación de deslizamiento */
+  .button-container-buttons:hover .button-overlay {
+    transform: translateY(110%);
+  }
 </style>
 
 <div id="divtituloPag">
@@ -142,8 +146,12 @@
     <div class="card big-div">
       <div class="card-body">
         <h4 class="card-title d-flex justify-content-between align-items-center">
-          <span class="trunc-title">{{ title }} </span><a href="/notes/edit/{{_id}}"><i
-              class="fas fa-edit white-icon"></i></a>
+          <span class="trunc-title">{{ title }} </span>
+        {{#ifEqualsOr user creador condicion_cap}}
+          <a href="/notes/edit/{{_id}}">
+          <i class="fas fa-edit white-icon"></i></a>
+        {{/ifEqualsOr}}
+
         </h4>
         <p class="trunc-description">{{{ description }}}</p>
 
@@ -153,7 +161,8 @@
           {{#ifEqualsOr user creador condicion_cap}}
           <div class="button-container d-inline-block mx-2">
             <form action="/notes/paginas/{{_id}}">
-              <button type="submit" class="btn btn-success btn-block btn-sm green-button"><i class="fas fa-book"></i></button>
+              <button type="submit" class="btn btn-success btn-block btn-sm green-button"><i
+                  class="fas fa-book"></i></button>
             </form>
           </div>
           {{else}}
@@ -163,12 +172,11 @@
           {{/ifEqualsOr}}
           <!-- Likes -->
           <div class="button-container d-inline-block mx-2">
-            <form action="/notes/like/{{_id}}" method="POST">
-              <button type="submit"
-                class="btn btn-danger btn-block btn-sm {{#if liked}}red-button{{else}}black-button{{/if}}">
-                <i class="fas fa-heart white-icon {{#if liked}}red-heart{{/if}}"></i> {{ likeTotal }}
-              </button>
-            </form>
+            <button type="button"
+              class="btn btn-danger btn-block btn-sm {{#if liked}}red-button{{else}}black-button{{/if}}"
+              data-note-id="{{_id}}">
+              <i class="fas fa-heart white-icon {{#if liked}}red-heart{{/if}}"></i> {{ likeTotal }}
+            </button>
           </div>
           {{#ifEquals user creador}}
 
@@ -187,10 +195,54 @@
   {{else}}
   <div class="card mx-auto">
     <div class="card-body">
-      <h1>Hello {{user.name}}</h1>
-      <p clsss="lead">There are not Notes yet.</p>
+      <h1>Hola {{user.name}}</h1>
+      <p clsss="lead">Tienes alguna historia que contar?, que empiece la aventura.</p>
       <a href="/notes/add" class="btn btn-success btn-block">Crea una Historia!</a>
     </div>
   </div>
   {{/each}}
 </div>
+
+<script>
+  // Obtén todos los botones de like
+  const likeButtons = document.querySelectorAll('.btn-danger');
+
+  // Agregar un evento clic a cada botón de like
+  likeButtons.forEach(likeButton => {
+    likeButton.addEventListener('click', async () => {
+      const noteId = likeButton.getAttribute('data-note-id');
+
+      try {
+        const response = await fetch(`/notes/like/${noteId}`, {
+          method: 'POST',
+          // Puedes agregar encabezados si es necesario
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const likes = data.likes;
+          let dislikes = data.dislike
+
+          if (dislikes) {
+            likeButton.style.color = 'white';
+            likeButton.innerHTML = `
+          <i class="fas fa-heart white-icon"></i> ${likes.length}
+        `;
+          } else {
+            likeButton.style.color = 'red';
+            likeButton.innerHTML = `
+          <i class="fas fa-heart white-icon red-heart"></i> ${likes.length}
+        `;
+          }
+          // Actualizar el botón de like y la cantidad de likes en la interfaz
+
+        } else {
+          console.error('Error al dar like');
+        }
+      } catch (error) {
+        console.error('Error de red:', error);
+      }
+    });
+  });
+
+</script>

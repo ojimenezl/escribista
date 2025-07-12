@@ -18,16 +18,13 @@ import "./config/passport.js";
 import bodyParser from 'body-parser';
 
 // Stripe
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+import Stripe from 'stripe';
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
 // Initializations
 const app = express();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-
-
-
-
 
 // settings
 app.set("port", PORT);
@@ -88,6 +85,32 @@ app.use((req, res, next) => {
   }
   next();
 });
+// Middleware inline para obtener el balance de Stripe
+app.use(async (req, res, next) => {
+  if (req.user && req.user.stripe_account_id) {
+    try {
+      const balance = await stripe.balance.retrieve({
+        stripeAccount: req.user.stripe_account_id,
+      });
+
+      const available = balance.available.find(b => b.currency === 'eur');
+      const pending = balance.pending.find(b => b.currency === 'eur');
+
+      res.locals.stripeBalanceAvailable = available ? (available.amount / 100).toFixed(2) : "0.00";
+      res.locals.stripeBalancePending = pending ? (pending.amount / 100).toFixed(2) : "0.00";
+    } catch (error) {
+      console.error("Error obteniendo el saldo de Stripe:", error.message);
+      res.locals.stripeBalanceAvailable = "0.00";
+      res.locals.stripeBalancePending = "0.00";
+    }
+  } else {
+    res.locals.stripeBalanceAvailable = null;
+    res.locals.stripeBalancePending = null;
+  }
+
+  next();
+});
+
 
 // routes
 app.use(indexRoutes);

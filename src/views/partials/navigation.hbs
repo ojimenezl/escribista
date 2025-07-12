@@ -6,15 +6,28 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        {{#if user}}
-        <li class="nav-item">
-          <a class="nav-link" href="/notes">Libros</a>
-        </li>
-        {{/if}}
-      </ul>
       <ul class="navbar-nav ms-auto">
         {{#if user}}
+                <li class="nav-item">
+                  <a class="nav-link" href="/notes">Libros</a>
+                </li>
+                {{/if}}
+              </ul>
+              <ul class="navbar-nav ms-auto">
+                {{#if user}}
+              {{#if user.stripe_account_id}}
+          <p>Saldo disponible: {{stripeBalanceAvailable}} €</p>
+          <p>Saldo pendiente: {{stripeBalancePending}} €</p>
+        {{else}}
+          <form action="/auth/stripe/account" method="POST">
+            <button type="submit" class="btn btn-primary">
+              Conectar con Stripe
+            </button>
+          </form>
+        {{/if}}
+
+
+
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
             data-bs-toggle="dropdown" aria-expanded="false">
@@ -26,6 +39,10 @@
             <a class="dropdown-item" href="/notes/add">Crear Libro</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="/auth/logout">Logout</a>
+            <a href="/stripe/onboarding" class="btn btn-primary">
+              Completar registro en Stripe
+            </a>
+
           </ul>
         </li>
         {{else}}

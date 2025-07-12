@@ -15,8 +15,9 @@ const NoteSchema = new mongoose.Schema(
       required: true,
     },
     precio: {
-      type: String,
+      type: Number,
       required: true,
+      default: 0,
     },
     creador: {
       type: String,

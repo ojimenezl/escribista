@@ -1,5 +1,53 @@
 import Note from "../models/Note.js";
+import User from "../models/User.js";
 import Capitulo from "../models/Capitulo.js";
+
+import Stripe from 'stripe';
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+
+export const createCheckoutSession = async (req, res) => {
+  try {
+    const note = await Note.findById(req.params.id).populate('creador');
+    const user = req.user;
+    const escritor = await User.findById(note.creador)
+    console.log(note.precio);
+    
+    if (!note || note.precio === 0) return res.redirect('/notes');
+    if (!escritor || !escritor.stripe_account_id) {
+      return res.status(400).send('El autor no tiene Stripe configurado');
+    }
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment',
+      line_items: [{
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: note.title,
+            description: note.description,
+          },
+          unit_amount: note.precio, // en céntimos
+        },
+        quantity: 1,
+      }],
+      payment_intent_data: {
+        application_fee_amount: Math.round(note.precio * 0.10),
+        transfer_data: {
+          destination: escritor.stripe_account_id,
+        },
+      },
+      customer_email: user.email,
+      success_url: `${process.env.DOMINIO}/notes/success/${note._id}`,
+      cancel_url: `${process.env.DOMINIO}/notes/cancel`,
+    });
+
+    res.redirect(session.url);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Algo salió mal");
+  }
+};
 
 
 export const renderNoteForm = (req, res) => res.render("notes/new-note");
@@ -37,7 +85,7 @@ export const createNewNote = async (req, res) => {
       description,
     });
 
-  const newNote = new Note({ title, description, genre, precio: precio || 0 });
+  const newNote = new Note({ title, description, genre, precio: parseFloat(precio) || 0 });
   newNote.creador = req.user.id;
   await newNote.save();
   req.flash("success_msg", "Note Added Successfully");
@@ -184,7 +232,7 @@ export const updateNote = async (req, res) => {
   //   title,
   //   description,
   // });
-  await Note.findByIdAndUpdate(req.params.id, { title, description, genre, precio: precio || 0 });
+  await Note.findByIdAndUpdate(req.params.id, { title, description, genre, precio: parseFloat(precio) || 0});
 
   req.flash("success_msg", "Note Updated Successfully");
   res.redirect("/notes");

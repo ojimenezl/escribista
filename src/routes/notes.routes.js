@@ -1,4 +1,5 @@
 import { Router } from "express";
+import Note from "../models/Note.js";
 import {
   renderNoteForm,
   renderCapituloForm,
@@ -16,6 +17,7 @@ import {
   updateCapitulo,
   handleLike,
   renderMyNotes,
+  createCheckoutSession,
 } from "../controllers/notes.controller.js";
 import { isAuthenticated } from "../helpers/auth.js";
 
@@ -54,5 +56,13 @@ router.post("/notes/new-pagina", isAuthenticated, createNewPagina);
 router.get("/notes/see/:id", isAuthenticated, renderSeeForm);
 router.put("/notes/see-note/:id", isAuthenticated, seeNote);
 router.post("/notes/like/:id", handleLike);
+
+//pagos stripe
+router.post('/notes/checkout/:id', isAuthenticated, createCheckoutSession);
+router.get('/notes/success/:id', async (req, res) => {
+  const note = await Note.findById(req.params.id).lean(); // `.lean()` es importante para Handlebars
+  res.render('notes/success', { note });
+});
+
 
 export default router;
